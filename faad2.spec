@@ -12,7 +12,7 @@ Summary:	Library and frontend for decoding MPEG2/4 AAC
 Name:		faad2
 Epoch:		1
 Version:	2.7
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	GPLv2+
 Group:		Applications/Multimedia
 URL:		http://www.audiocoding.com/faad2.html
@@ -127,6 +127,10 @@ install -dm755 %{buildroot}%{_mandir}/man1
 %{xmmsinputplugindir}/libmp4.so
 
 %changelog
+
+* Fri Jul 08 2016 David Vásquez <davidjeremias82 AT gmail DOT com> - 1:2.7-7
+- Massive rebuild
+
 * Mon Sep 01 2014 Sérgio Basto <sergio@serjux.com> - 1:2.7-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
