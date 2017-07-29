@@ -1,30 +1,22 @@
-%{?el4:%define _without_sysfs 1}
-%{?fc3:%define _without_sysfs 1}
-%{?fc2:%define _without_sysfs 1}
-%{?fc1:%define _without_sysfs 1}
-%{?el3:%define _without_sysfs 1}
-%{?rh9:%define _without_sysfs 1}
-%{?rh7:%define _without_sysfs 1}
-%{?el2:%define _without_sysfs 1}
 %define         xmmsinputplugindir      %(xmms-config --input-plugin-dir 2>/dev/null)
 
 Summary:	Library and frontend for decoding MPEG2/4 AAC
 Name:		faad2
 Epoch:		1
-Version:	2.7
-Release:	7%{?dist}
+Version:	2.8.1
+Release:	3%{?dist}
 License:	GPLv2+
 Group:		Applications/Multimedia
 URL:		http://www.audiocoding.com/faad2.html
 Source:		http://downloads.sourceforge.net/sourceforge/faac/%{name}-%{version}.tar.bz2
-# fix non-PIC objects in libmp4ff.a
-Patch0:		%{name}-pic.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	gcc-c++
 BuildRequires:	id3lib-devel
-%{!?_without_sysfs:BuildRequires: libsysfs-devel}
+BuildRequires:	libsysfs-devel
 BuildRequires:	xmms-devel
 BuildRequires:	zlib-devel
+BuildRequires:	automake
+BuildRequires:	libtool
 
 %description
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder, completely
@@ -67,37 +59,31 @@ This package contains an input plugin for xmms.
 
 %prep
 %setup -q
-%patch0 -p1 -b .pic
-find . -name "*.c" -o -name "*.h" | xargs chmod 644
-
-for f in AUTHORS COPYING ChangeLog NEWS README* TODO ; do
-    tr -d '\r' <$f >$f.n && touch -r $f $f.n && mv -f $f.n $f
-done
+sed -i 's|#define FAAD2_VERSION PACKAGE_VERSION|#define FAAD2_VERSION "%{version}"|g' include/neaacdec.h
 
 %build
+./bootstrap
+
+export CFLAGS="%{optflags} -fPIC -fno-strict-aliasing"
+
 %configure \
     --disable-static \
+    --enable-shared \
     --with-xmms \
-#    --with-drm
 
-# remove rpath from libtool
-sed -i.rpath 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i.rpath 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 %{__make} %{?_smp_mflags}
 
 %install
-%{__rm} -rf %{buildroot}
-%{__make} install DESTDIR=%{buildroot}
-%{__rm} %{buildroot}%{_libdir}/libfaad.la
-%{__rm} %{buildroot}%{xmmsinputplugindir}/libmp4.la
-%{__rm} %{buildroot}%{_includedir}/mp4ff{,int}.h
-%{__rm} %{buildroot}%{_libdir}/libmp4ff.a
-install -dm755 %{buildroot}%{_mandir}/man1
-%{__mv} %{buildroot}%{_mandir}/{manm/faad.man,man1/faad.1}
 
-%clean
-%{__rm} -rf %{buildroot}
+%make_install
+
+# License 
+install -Dm644 COPYING \
+    $RPM_BUILD_ROOT/usr/share/licenses/faad2/LICENSE
+
+find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
+
 
 %post libs -p /sbin/ldconfig
 
@@ -105,13 +91,16 @@ install -dm755 %{buildroot}%{_mandir}/man1
 
 %files
 %defattr(-, root, root, -)
-%doc AUTHORS COPYING ChangeLog NEWS README*
+%doc AUTHORS ChangeLog NEWS README*
+%license /usr/share/licenses/faad2/LICENSE
 %{_bindir}/faad
 %{_mandir}/man1/faad.1*
 
 %files libs
 %defattr(-,root,root,-)
 %{_libdir}/libfaad.so.*
+%{_libdir}/libfaad_drm.so.2
+%{_libdir}/libfaad_drm.so.2.0.0
 
 %files devel
 %defattr(-, root, root, -)
@@ -119,6 +108,7 @@ install -dm755 %{buildroot}%{_mandir}/man1
 %{_includedir}/faad.h
 %{_includedir}/neaacdec.h
 %{_libdir}/libfaad.so
+%{_libdir}/libfaad_drm.so
 
 %files -n xmms-%{name}
 %defattr(-,root,root,-)
@@ -127,6 +117,9 @@ install -dm755 %{buildroot}%{_mandir}/man1
 %{xmmsinputplugindir}/libmp4.so
 
 %changelog
+
+* Fri Jul 28 2017 David Va <davidva AT tutanota DOT com> - 2.8.1-3
+- Updated to 2.8.1-3
 
 * Fri Jul 08 2016 David Vásquez <davidjeremias82 AT gmail DOT com> - 1:2.7-7
 - Massive rebuild
