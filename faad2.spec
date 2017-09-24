@@ -1,14 +1,15 @@
 %define         xmmsinputplugindir      %(xmms-config --input-plugin-dir 2>/dev/null)
+%global base_ver 2.8.0
 
 Summary:	Library and frontend for decoding MPEG2/4 AAC
 Name:		faad2
 Epoch:		1
-Version:	2.8.1
-Release:	3%{?dist}
+Version:	2.8.3
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Multimedia
 URL:		http://www.audiocoding.com/faad2.html
-Source:		http://downloads.sourceforge.net/sourceforge/faac/%{name}-%{version}.tar.bz2
+Source:		https://sourceforge.net/projects/faac/files/faad2-src/faad2-%{base_ver}/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	gcc-c++
 BuildRequires:	id3lib-devel
@@ -62,7 +63,6 @@ This package contains an input plugin for xmms.
 sed -i 's|#define FAAD2_VERSION PACKAGE_VERSION|#define FAAD2_VERSION "%{version}"|g' include/neaacdec.h
 
 %build
-./bootstrap
 
 export CFLAGS="%{optflags} -fPIC -fno-strict-aliasing"
 
@@ -78,10 +78,6 @@ export CFLAGS="%{optflags} -fPIC -fno-strict-aliasing"
 
 %make_install
 
-# License 
-install -Dm644 COPYING \
-    $RPM_BUILD_ROOT/usr/share/licenses/faad2/LICENSE
-
 find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 
 
@@ -92,7 +88,7 @@ find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 %files
 %defattr(-, root, root, -)
 %doc AUTHORS ChangeLog NEWS README*
-%license /usr/share/licenses/faad2/LICENSE
+%license COPYING
 %{_bindir}/faad
 %{_mandir}/man1/faad.1*
 
@@ -104,7 +100,6 @@ find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 
 %files devel
 %defattr(-, root, root, -)
-%doc TODO docs/Ahead?AAC?Decoder?library?documentation.pdf
 %{_includedir}/faad.h
 %{_includedir}/neaacdec.h
 %{_libdir}/libfaad.so
@@ -117,6 +112,9 @@ find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 %{xmmsinputplugindir}/libmp4.so
 
 %changelog
+
+* Sat Sep 23 2017 David Va <davidva AT tutanota DOT com> - 2.8.3-1
+- Updated to 2.8.3-1
 
 * Fri Jul 28 2017 David Va <davidva AT tutanota DOT com> - 2.8.1-3
 - Updated to 2.8.1-3
