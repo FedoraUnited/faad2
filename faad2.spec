@@ -4,7 +4,7 @@
 Summary:	Library and frontend for decoding MPEG2/4 AAC
 Name:		faad2
 Epoch:		1
-Version:	2.8.3
+Version:	2.8.5
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Multimedia
@@ -112,6 +112,9 @@ find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 %{xmmsinputplugindir}/libmp4.so
 
 %changelog
+
+* Mon Oct 02 2017 David Va <davidva AT tutanota DOT com> - 2.8.5-1
+- Updated to 2.8.5-1
 
 * Sat Sep 23 2017 David Va <davidva AT tutanota DOT com> - 2.8.3-1
 - Updated to 2.8.3-1
