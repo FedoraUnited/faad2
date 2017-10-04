@@ -18,6 +18,8 @@ BuildRequires:	xmms-devel
 BuildRequires:	zlib-devel
 BuildRequires:	automake
 BuildRequires:	libtool
+BuildRequires:	chrpath
+
 
 %description
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder, completely
@@ -80,6 +82,10 @@ export CFLAGS="%{optflags} -fPIC -fno-strict-aliasing"
 
 find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 
+
+# Remove rpath.
+chrpath --delete $RPM_BUILD_ROOT%{_bindir}/faad
+chrpath --delete $RPM_BUILD_ROOT%{_libdir}/xmms/Input/libmp4.so
 
 %post libs -p /sbin/ldconfig
 
