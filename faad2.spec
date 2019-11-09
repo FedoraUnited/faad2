@@ -1,15 +1,15 @@
-%define         xmmsinputplugindir      %(xmms-config --input-plugin-dir 2>/dev/null)
-%global base_ver 2.8.0
+%global xmmsinputplugindir      %(xmms-config --input-plugin-dir 2>/dev/null)
+%global base_ver 2.9.1
 
 Summary:	Library and frontend for decoding MPEG2/4 AAC
 Name:		faad2
 Epoch:		1
-Version:	2.8.8
+Version:	2.9.1
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Multimedia
 URL:		http://www.audiocoding.com/faad2.html
-Source:		https://sourceforge.net/projects/faac/files/faad2-src/faad2-%{base_ver}/%{name}-%{version}.tar.gz
+Source:	https://github.com/knik0/faad2/archive/2_9_1.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	gcc-c++
 BuildRequires:	id3lib-devel
@@ -118,6 +118,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/xmms/Input/libmp4.so
 %{xmmsinputplugindir}/libmp4.so
 
 %changelog
+
+* Fri Nov 08 2019 David Va <davidva AT tutanota DOT com> - 2.9.1-1
+- Updated to 2.9.1
 
 * Tue Dec 19 2017 David Va <davidva AT tutanota DOT com> - 2.8.8-1
 - Updated to 2.8.8

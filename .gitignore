@@ -3,4 +3,7 @@ BUILDROOT/*
 RPMS/*
 SPECS/*
 SRPMS/*
-faad2*.tar.bz2
+.directory
+*.tar.bz2
+*.tar.gz
+*.rpm
