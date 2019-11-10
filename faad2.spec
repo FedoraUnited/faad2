@@ -14,7 +14,6 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	gcc-c++
 BuildRequires:	id3lib-devel
 BuildRequires:	libsysfs-devel
-BuildRequires:	xmms-devel
 BuildRequires:	zlib-devel
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -47,34 +46,21 @@ written from scratch.
 
 This package contains development files and documentation for libfaad.
 
-%package -n xmms-%{name}
-Summary:	AAC XMMS Input Plugin
-Group:		Applications/Multimedia
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-Provides:	xmms-aac = %{version}-%{release}
-Obsoletes:	xmms-aac < 2.6.1
-
-%description -n xmms-%{name}
-FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder, completely
-written from scratch.
-
-This package contains an input plugin for xmms.
-
 %prep
-%setup -q
+%autosetup -n faad2-2_9_1
 sed -i 's|#define FAAD2_VERSION PACKAGE_VERSION|#define FAAD2_VERSION "%{version}"|g' include/neaacdec.h
+
+sed -i -e 's:iquote :I:' libfaad/Makefile.am
+sed -i 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.ac
 
 %build
 
-export CFLAGS="%{optflags} -fPIC -fno-strict-aliasing"
+autoreconf -vfi
 
 %configure \
-    --disable-static \
-    --enable-shared \
-    --with-xmms \
+    --disable-static 
 
-
-%{__make} %{?_smp_mflags}
+%make_build
 
 %install
 
@@ -82,10 +68,6 @@ export CFLAGS="%{optflags} -fPIC -fno-strict-aliasing"
 
 find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 
-
-# Remove rpath.
-chrpath --delete $RPM_BUILD_ROOT%{_bindir}/faad
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/xmms/Input/libmp4.so
 
 %post libs -p /sbin/ldconfig
 
@@ -110,12 +92,6 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/xmms/Input/libmp4.so
 %{_includedir}/neaacdec.h
 %{_libdir}/libfaad.so
 %{_libdir}/libfaad_drm.so
-
-%files -n xmms-%{name}
-%defattr(-,root,root,-)
-%doc plugins/xmms/AUTHORS plugins/xmms/NEWS
-%doc plugins/xmms/ChangeLog plugins/xmms/README plugins/xmms/TODO
-%{xmmsinputplugindir}/libmp4.so
 
 %changelog
 
