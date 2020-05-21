@@ -1,15 +1,15 @@
 %global xmmsinputplugindir      %(xmms-config --input-plugin-dir 2>/dev/null)
-%global base_ver 2.9.1
+%global base_ver 2_9_2
 
 Summary:	Library and frontend for decoding MPEG2/4 AAC
 Name:		faad2
 Epoch:		1
-Version:	2.9.1
+Version:	2.9.2
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Multimedia
 URL:		http://www.audiocoding.com/faad2.html
-Source:	https://github.com/knik0/faad2/archive/2_9_1.tar.gz
+Source:	https://github.com/knik0/faad2/archive/%{base_ver}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	gcc-c++
 BuildRequires:	id3lib-devel
@@ -47,7 +47,7 @@ written from scratch.
 This package contains development files and documentation for libfaad.
 
 %prep
-%autosetup -n faad2-2_9_1
+%autosetup -n faad2-%{base_ver}
 sed -i 's|#define FAAD2_VERSION PACKAGE_VERSION|#define FAAD2_VERSION "%{version}"|g' include/neaacdec.h
 
 sed -i -e 's:iquote :I:' libfaad/Makefile.am
@@ -92,8 +92,12 @@ find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 %{_includedir}/neaacdec.h
 %{_libdir}/libfaad.so
 %{_libdir}/libfaad_drm.so
+%{_libdir}/pkgconfig/faad2.pc
 
 %changelog
+
+* Wed May 20 2020 David Va <davidva AT tutanota DOT com> - 2.9.2-1
+- Updated to 2.9.2
 
 * Fri Nov 08 2019 David Va <davidva AT tutanota DOT com> - 2.9.1-1
 - Updated to 2.9.1
