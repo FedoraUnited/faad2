@@ -4,12 +4,12 @@
 Summary:	Library and frontend for decoding MPEG2/4 AAC
 Name:		faad2
 Epoch:		1
-Version:	2.9.2
+Version:	2.10.0
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Multimedia
 URL:		http://www.audiocoding.com/faad2.html
-Source:	https://github.com/knik0/faad2/archive/%{base_ver}.tar.gz
+Source:		https://github.com/knik0/faad2/archive/%{base_ver}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	gcc-c++
 BuildRequires:	id3lib-devel
